@@ -4,7 +4,7 @@ plugins {
 
 java {
   toolchain {
-    languageVersion = JavaLanguageVersion.of(11)
+    languageVersion = JavaLanguageVersion.of(17)
   }
 }
 
@@ -23,12 +23,8 @@ configurations {
 }
 
 dependencies {
-  // this will be provided by the workflow-bot application at runtime
   compileOnly 'org.finos.symphony.wdk:workflow-language:1.1.0'
-
   implementation 'org.apache.commons:commons-text:1.9'
-
-  // used to download the standalone WDK bot jar
   botJar 'org.finos.symphony.wdk:workflow-bot-app:1.1.0:boot'
 }
 
@@ -47,4 +43,5 @@ tasks.register('customActivityLibs', Copy) {
   into "lib"
 }
 
+tasks.build.dependsOn tasks.botJar
 tasks.build.dependsOn tasks.customActivityLibs

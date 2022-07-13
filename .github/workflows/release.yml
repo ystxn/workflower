@@ -13,11 +13,7 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: 17
-    - uses: actions/cache@v1
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
+    - uses: burrunan/gradle-cache-action@v1
     - name: Derive version
       id: deriveVersion
       run: |

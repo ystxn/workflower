@@ -25,8 +25,9 @@ RUN jlink \
 
 FROM debian:bullseye-slim
 COPY --from=1 /jre /jre
+RUN ln -s /jre/bin/java /bin/java
 WORKDIR /data/symphony
 COPY ./ext-app/build/libs/*.jar app.jar
 COPY ./wdk-bot/workflow-bot-app.jar wdk-bot/workflow-bot-app.jar
 COPY ./wdk-bot/application.yaml wdk-bot/application.yaml
-ENTRYPOINT [ "/jre/bin/java", "-jar", "./app.jar", "--spring.profiles.active=prod" ]
+ENTRYPOINT [ "java", "-jar", "./app.jar", "--spring.profiles.active=prod" ]

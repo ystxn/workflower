@@ -23,4 +23,8 @@ dependencies {
     runtimeOnly 'ch.qos.logback:logback-classic'
 }
 
+tasks.named("jar") {
+    enabled = false
+}
+
 version = '0.1'

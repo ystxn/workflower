@@ -1,0 +1,5 @@
+bdk:
+  bot:
+    username: ys-bot
+    privateKey:
+      path: ../../rsa/privatekey.pem

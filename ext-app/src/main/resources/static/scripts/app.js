@@ -3,7 +3,7 @@ require.config({
 });
 
 const fetchLogs = () => {
-    fetch('https://localhost:10443/logs')
+    fetch('/logs')
         .then(response => response.text())
         .then(text => {
             const logs = document.querySelector("#logs");
@@ -14,7 +14,7 @@ const fetchLogs = () => {
 };
 
 const readWorkflow = () => {
-    fetch('https://localhost:10443/read-workflow')
+    fetch('/read-workflow')
         .then(response => response.text())
         .then(text => {
             require(["vs/editor/editor.main"], function () {
@@ -33,7 +33,7 @@ const writeWorkflow = () => {
         method: 'POST',
         body: window.editor.getValue()
     }
-    fetch('https://localhost:10443/write-workflow', config)
+    fetch('/write-workflow', config)
         .then(response => response.text())
         .then(() => {
             document.querySelector("#status").textContent = "Saved!";

@@ -26,8 +26,7 @@ let register = data => {
         appControllerService.implement({
             select: id => {
                 if (id === 'show-module') {
-                    modulesService.show("test-app", {title: "Workflower"}, "app:controller", "https://localhost:10443/app.html")
-
+                    modulesService.show("test-app", {title: "Workflower"}, "app:controller", "/app.html")
                 }
             }
         })

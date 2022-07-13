@@ -1,8 +1,8 @@
-name: Publish Docker Image to GitHub Packages
+name: Build and Publish
 
 on:
   release:
-    types: [published]
+    types: [ published ]
 
 jobs:
   build-and-push-image:
@@ -17,8 +17,6 @@ jobs:
     - uses: actions/setup-java@v1
       with:
         java-version: 17
-
-    - uses: burrunan/gradle-cache-action@v1
 
     - run: ./gradlew build
 

@@ -1,6 +1,6 @@
 let appControllerService = SYMPHONY.services.register("app:controller")
 let navService
-let appId = 'localhost-10443'
+let appId = window.location.hostname === 'localhost' ? 'localhost-10443' : 'workflower';
 
 let authenticate = () => {
     return $.post({

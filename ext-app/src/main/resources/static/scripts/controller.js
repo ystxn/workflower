@@ -1,7 +1,6 @@
 let appControllerService = SYMPHONY.services.register("app:controller")
 let navService
 const origin = window.location.origin;
-console.log('Origin is: ' + origin)
 let appId = window.location.hostname === 'localhost' ? 'localhost-10443' : 'workflower';
 
 let authenticate = () => {

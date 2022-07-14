@@ -5,8 +5,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import javax.annotation.PostConstruct;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -14,9 +17,7 @@ import java.nio.file.Paths;
 @RestController
 @RequiredArgsConstructor
 public class WebService {
-    private final String logPath = "wdk-bot/wdk.log";
     private final String workflowPath = "workflows/abc.swadl.yaml";
-    private final int limit = 500;
     private final BotService botService;
 
     @PostConstruct
@@ -25,8 +26,8 @@ public class WebService {
     }
 
     @GetMapping("logs")
-    public String getLogs() {
-        return readLog(logPath);
+    public SseEmitter stream() {
+        return botService.getEmitter();
     }
 
     @GetMapping("read-workflow")
@@ -40,39 +41,5 @@ public class WebService {
         writer.write(contents);
         writer.close();
         return contents;
-    }
-
-    public String readLog(String path) {
-        int lines = 0;
-        File file = new File(path);
-        StringBuilder builder = new StringBuilder();
-        RandomAccessFile randomAccessFile = null;
-        try {
-            randomAccessFile = new RandomAccessFile(file, "r");
-            long fileLength = file.length() - 1;
-            randomAccessFile.seek(fileLength);
-            for (long pointer = fileLength; pointer >= 0; pointer--) {
-                randomAccessFile.seek(pointer);
-                char c;
-                c = (char) randomAccessFile.read();
-                if (c == '\n' && lines++ > limit) {
-                    break;
-                }
-                builder.append(c);
-            }
-            builder.reverse();
-            return builder.toString();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (randomAccessFile != null) {
-                try {
-                    randomAccessFile.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return null;
     }
 }

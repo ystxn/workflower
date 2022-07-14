@@ -3,14 +3,14 @@ require.config({
 });
 
 const fetchLogs = () => {
-    fetch('/logs')
-        .then(response => response.text())
-        .then(text => {
-            const logs = document.querySelector("#logs");
-            logs.innerHTML = text;
+    const logs = document.querySelector("#logs");
+    let eventSource = new EventSource("/logs");
+    eventSource.onmessage = function(event) {
+        logs.innerHTML = logs.innerHTML + (logs.innerHTML.length > 0 ? "\n" : "") + event.data;
+        if (document.querySelector("#tail").checked) {
             logs.scrollTop = logs.scrollHeight;
-            setTimeout(fetchLogs, 1000);
-        });
+        }
+    };
 };
 
 const readWorkflow = () => {

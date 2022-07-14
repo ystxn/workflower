@@ -5,14 +5,12 @@ bdk:
     privateKey:
       path: rsa/bot-privatekey.pem
 workflows.folder: ../workflows
-logging:
-  file.name: wdk.log
-  level:
-    org.reflections: error
-    org.springframework: error
-    org.apache: error
-    com.zaxxer: error
-    com.symphony: info
-    # com.symphony.bdk.workflow.engine.camunda.bpmn.CamundaBpmnBuilder: debug
+logging.level:
+  org.reflections: error
+  org.springframework: error
+  org.apache: error
+  com.zaxxer: error
+  com.symphony: info
+  # com.symphony.bdk.workflow.engine.camunda.bpmn.CamundaBpmnBuilder: debug
 spring.main.web-application-type: none
 management.endpoints.web.exposure.exclude: "*"

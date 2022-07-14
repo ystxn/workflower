@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import javax.annotation.PostConstruct;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,11 +18,6 @@ import java.nio.file.Paths;
 public class WebService {
     private final String workflowPath = "workflows/abc.swadl.yaml";
     private final BotService botService;
-
-    @PostConstruct
-    public void initBot() throws IOException {
-        botService.runBot();
-    }
 
     @GetMapping("logs")
     public SseEmitter stream() {

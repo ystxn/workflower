@@ -4,9 +4,10 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import javax.annotation.PostConstruct;
 import java.io.*;
 import java.time.Instant;
 
@@ -15,24 +16,34 @@ import java.time.Instant;
 @RequiredArgsConstructor
 public class BotService {
     private final Environment env;
+    private final TaskExecutor taskExecutor;
     @Getter
     private SseEmitter emitter;
 
+    @PostConstruct
+    public void initBot() {
+        taskExecutor.execute(this::runBot);
+    }
+
     private void resetEmitter() {
-        emitter = new SseEmitter();
+        emitter = new SseEmitter(-1L);
         emitter.onTimeout(this::resetEmitter);
     }
 
-    @Async
-    public void runBot() throws IOException {
+    public void runBot() {
         resetEmitter();
         String command = "java -jar workflow-bot-app.jar --spring.profiles.active=" + env.getActiveProfiles()[0];
-        Process p = Runtime.getRuntime().exec(command, null, new File("wdk-bot"));
-        (new Thread(new StreamListener(p.getInputStream()))).start();
-        (new Thread(new StreamListener(p.getErrorStream()))).start();
+        try {
+            Process p = Runtime.getRuntime().exec(command, null, new File("wdk-bot"));
+            taskExecutor.execute(() -> new StreamListener(p.getInputStream()).run());
+            taskExecutor.execute(() -> new StreamListener(p.getErrorStream()).run());
+        } catch (IOException e) {
+            log.error("Process Error", e);
+        }
     }
 
     public void writeLog(String log) {
+        System.out.println(log);
         try {
             emitter.send(SseEmitter.event()
                 .data(log)
@@ -43,7 +54,7 @@ public class BotService {
         }
     }
 
-    private class StreamListener implements Runnable {
+    private class StreamListener {
         private final BufferedReader reader;
 
         public StreamListener(InputStream s) {
@@ -54,11 +65,10 @@ public class BotService {
             try {
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    System.out.println(line);
                     writeLog(line);
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error("I/O Error", e);
             }
         }
     }

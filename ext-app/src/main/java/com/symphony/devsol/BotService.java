@@ -26,8 +26,10 @@ public class BotService {
     }
 
     private void resetEmitter() {
-        emitter = new SseEmitter(-1L);
+        emitter = new SseEmitter(1000L * 60 * 60 * 24);
         emitter.onTimeout(this::resetEmitter);
+        emitter.onCompletion(this::resetEmitter);
+        emitter.onError(e -> log.error("Emitter Error", e));
     }
 
     public void runBot() {

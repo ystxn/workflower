@@ -45,6 +45,9 @@ public class BotService {
     }
 
     public void writeLog(String log) {
+        if (log.contains("unhandled token type NOT_AVAILABLE")) {
+            return;
+        }
         System.out.println(log);
         try {
             emitter.send(SseEmitter.event()

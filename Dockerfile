@@ -1,6 +1,6 @@
 FROM openjdk:18-slim-bullseye
 WORKDIR /build
-COPY ./ext-app/build/libs/*.jar /app/app.jar
+COPY ./backend/build/libs/*.jar /app/app.jar
 RUN cd /app && jar -xf app.jar && \
     jdeps \
     --ignore-missing-deps \
@@ -39,7 +39,7 @@ FROM debian:bullseye-slim
 COPY --from=1 /jre /jre
 RUN ln -s /jre/bin/java /bin/java
 WORKDIR /data/symphony
-COPY ./ext-app/build/libs/*.jar app.jar
+COPY ./backend/build/libs/*.jar app.jar
 COPY ./wdk-bot/workflow-bot-app.jar wdk-bot/workflow-bot-app.jar
 COPY ./wdk-bot/application.yaml wdk-bot/application.yaml
 ENTRYPOINT [ "java", "-jar", "./app.jar", "--spring.profiles.active=prod" ]

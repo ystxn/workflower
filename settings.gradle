@@ -1,4 +1,4 @@
 rootProject.name = 'workflower'
 
-include 'ext-app'
+include 'backend'
 include 'wdk-bot'

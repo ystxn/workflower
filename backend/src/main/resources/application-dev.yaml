@@ -8,3 +8,4 @@ server:
     key-store-password: password
     key-store-type: pkcs12
     key-alias: tomcat
+spring.web.resources.static-locations: file:web/public

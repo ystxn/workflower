@@ -1,17 +1,8 @@
 id: abc
 activities:
-  - send-message:
-      id: init
-      on:
-        message-received:
-          content: hello
-      content: |
-        hihihix
-
-  - update-message:
-      id: aloha
-      on:
-        form-replied:
-          form-id: init
-      message-id: ${init.outputs.msgId}
-      content: Hey
+- send-message:
+    id: abcd
+    on:
+      message-received:
+        content: hello
+    content: Hi!

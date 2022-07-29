@@ -25,15 +25,17 @@ public class WebService {
     }
 
     @GetMapping("read-workflow")
-    public String readWorkflow() throws IOException {
-        return String.join("\n", Files.readAllLines(Paths.get(workflowPath), StandardCharsets.UTF_8));
+    public Workflow readWorkflow() throws IOException {
+        return new Workflow(String.join("\n", Files.readAllLines(Paths.get(workflowPath), StandardCharsets.UTF_8)));
     }
 
     @PostMapping("write-workflow")
-    public String writeWorkflow(@RequestBody String contents) throws Exception {
+    public Workflow writeWorkflow(@RequestBody Workflow workflow) throws Exception {
         BufferedWriter writer = new BufferedWriter(new FileWriter(workflowPath));
-        writer.write(contents);
+        writer.write(workflow.contents);
         writer.close();
-        return contents;
+        return new Workflow(workflow.contents);
     }
+
+    record Workflow(String contents) {}
 }
